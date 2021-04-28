@@ -19,7 +19,10 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
         
         self.userdatas?.data?[id].first_name = first
         self.userdatas?.data?[id].last_name = last
+        
+        DispatchQueue.main.async {
         self.listTable.reloadData()
+        }
     }
     
    
@@ -123,7 +126,10 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
                       switch response.result {
                       case .success(_):
                          self.userdatas = response.result.value
-                           self.listTable.reloadData()
+                         DispatchQueue.main.async {
+                            self.listTable.reloadData()
+                            
+                         }
                        
                      activity.stop()
                  
