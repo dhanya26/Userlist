@@ -11,15 +11,16 @@ import Kingfisher
 
 class DetailVC: UIViewController {
     
+    //Variables
+    
     var firname = ""
     var lastNamee = ""
     var email = ""
     var imurl = ""
     var id = 0
+    var renameHandler: ((_ name: String,_ lastname: String, _ id: Int) -> Void)?
     
-    var delegate:EditedValues?
-    
-    
+    //IBOutlets
     
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var firstName: UITextField!
@@ -27,19 +28,24 @@ class DetailVC: UIViewController {
     @IBOutlet weak var lastNmaetext: UITextField!
     
     
-    
-    
+    //IBActions
     
     @IBAction func saveActn(_ sender: Any) {
+        
+        
         guard let navigationVC = self.navigationController else { return }
-           navigationVC.popViewController(animated: false)
-        delegate?.editedName(first: firstName.text ?? "", last: lastNmaetext.text ?? "", id: self.id)
+        navigationVC.popViewController(animated: false)
+        
+        if let handler = renameHandler {
+            handler(firstName.text ?? "", lastNmaetext.text ?? "", self.id)
+        }
+        
     }
     
-    
+    //VCOverides
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         
         firstName.text = self.firname
         lastNmaetext.text = self.lastNamee
@@ -50,33 +56,14 @@ class DetailVC: UIViewController {
         lastNmaetext.setUnderLine()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    //Closure
+    
+    func handleRenaming(handler: @escaping (_ name: String,_ lastname: String, _ id: Int) -> Void) {
+           renameHandler = handler
+       }
+    
 }
 
-protocol EditedValues: class {
-    func editedName(first:String,last:String,id:Int)
-}
 
-extension UITextField {
 
-    func setUnderLine() {
-        let border = CALayer()
-        let width = CGFloat(0.2)
-        border.borderColor = UIColor.darkGray.cgColor
-        border.frame = CGRect(x: 0, y: self.frame.size.height - width, width:  self.frame.size.width - 10, height: self.frame.size.height)
-        border.borderWidth = width
-        self.layer.addSublayer(border)
-        self.layer.masksToBounds = true
-    }
 
-}
